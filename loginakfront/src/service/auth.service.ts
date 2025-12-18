@@ -14,7 +14,10 @@ export class AuthService {
       tap(res=>{
         console.log('Respuesta del servidor:',res)
         localStorage.setItem('refresh',res.refresh)
-        localStorage.setItem('token',res.access);
+        localStorage.setItem('token',res.access)
+        console.log('El id usuario y rol')
+        localStorage.setItem('userId', res.userId)
+        localStorage.setItem('rol',res.rol)
         //localStorage.setItem('rol',res.usuario.rol.toUpperCase()); // toUpperCase() para que la comparacion sea entre mayusculas
         //localStorage.setItem('userId', res.usuario.id); // para guardar el ID del usuario del uso del carrito
       })
