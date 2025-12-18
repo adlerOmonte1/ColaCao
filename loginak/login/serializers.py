@@ -7,9 +7,10 @@ class UserSerializer(serializers.ModelSerializer):
         model = Usuario
         fields = ['id','email','username','first_name','last_name','rol','nombre_rol']
 
-# POR INVESTIGAR
+# Funcion de SimpleJWT, el proceso de Login (verificacion)
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
+    #Obtiene los datos del usuario e encripta toda la info
     def get_token(cls, user):
         token =  super().get_token(user)
         if user.rol:
@@ -18,13 +19,14 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             token['rol']='invitado'
         token['username'] = user.username
         return token
+    #El simpleJWT entrega refresh y access, pero se agrega rol,nombre,user
     def validate(self, attrs):
         data = super().validate(attrs)
         if self.user.rol:
             data['rol']=self.user.rol.nombre
         else:
             data['rol'] ='invitado'
-        data['nombre'] = self.user.first_name
+        data['nombre'] = self.user.username
         data['user_id']= self.user.id
         return data
 
