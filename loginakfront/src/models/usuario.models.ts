@@ -4,5 +4,7 @@ export class Usuario{
   email : string;
   first_name:string;
   password:string;
+  rol:string;
+  nombre_rol:string;
 
 }

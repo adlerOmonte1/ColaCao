@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import {Router, RouterLink} from '@angular/router'
+import {Router} from '@angular/router'
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../service/auth.service';
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, CommonModule, RouterLink],
+  imports: [FormsModule, CommonModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -25,7 +25,7 @@ export class Login {
       {
         next:(response)=>{
           console.log('Exitoso');
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['usuarios']);
         },
         error: (error) =>{
           console.log('error en el login',error);

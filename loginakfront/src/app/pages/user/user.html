@@ -1,0 +1,24 @@
+<div style="padding: 20px;">
+    <h1>Panel de Control</h1>
+
+    <div *ngIf="usuarios.length > 0" style="background: #d4edda; color: #155724; padding: 10px; margin-bottom: 20px;">
+        ✅ ÉXITO: Se han descargado {{ usuarios.length }} usuarios.
+    </div>
+
+    <div *ngIf="usuarios.length === 0" style="background: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 20px;">
+        ⚠️ ESPERANDO DATOS... (Si esto no cambia en 2 segundos, revisa la consola)
+    </div>
+
+    <ul>
+        <li *ngFor="let user of usuarios" style="margin-bottom: 10px; border-bottom: 1px solid #ccc; padding: 5px;">
+            <strong>ID:</strong> {{ user.id }} <br>
+            <strong>Usuario:</strong> {{ user.username }} <br>
+            <strong>Email:</strong> {{ user.email }} <br>
+            <strong>Rold:</strong> {{ user.nombre_rol }} 
+        </li>
+    </ul>
+
+    <hr>
+    <h3>Datos crudos (JSON):</h3>
+    <pre>{{ usuarios | json }}</pre>
+</div>
