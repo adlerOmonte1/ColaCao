@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from datetime import timezone
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 class UserSerializer(serializers.ModelSerializer):
     nombre_rol = serializers.CharField(source='rol.nombre', read_only=True)
@@ -56,3 +57,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         except Rol.DoesNotExist:
             pass
         return user
+
+class TicketReadSerializer(serializers.ModelSerializer):
+    nombre_cola = serializers.CharField(source='cola.nombre', read_only = True) #trae el nombre de la cola
+    tiempo_espera = serializers.SerializerMethodField()
+    class Meta:
+        models = Ticket
+        fields = ['id','nombre_cola','estado','tiempo_espera']
+    def get_tiempo_espera(self, obj):
+        delta = timezone.now() - obj.fecha_creacion
+        return f"{delta.seconds // 60} minutos"
