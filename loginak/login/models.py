@@ -26,10 +26,10 @@ class Usuario(AbstractUser):
 # PROYECTO DE COLACAO
 class Cola(models.Model):
     nombre = models.CharField(max_length=100)
-    codigo_letra = models.CharField(max_length=10, unique= True)
+    codigo_cola = models.CharField(max_length=10, unique= True)
     descripcion = models.CharField(max_length=100)
     def __str__(self):
-        return f"{self.nombre}:{self.codigo_letra}"
+        return f"{self.nombre}:{self.codigo_cola}"
 
 class Escritorio(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)

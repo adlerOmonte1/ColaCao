@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import *
-from datetime import timezone
+from django.utils import timezone
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 class UserSerializer(serializers.ModelSerializer):
     nombre_rol = serializers.CharField(source='rol.nombre', read_only=True)
@@ -36,7 +36,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     class Meta:
         model = Usuario
-        fields = ['email','password','username','first_name']
+        fields = ['email','password','username']
 
     def create(self, validated_data):
         username_final = validated_data.get('username')
@@ -59,11 +59,66 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 class TicketReadSerializer(serializers.ModelSerializer):
-    nombre_cola = serializers.CharField(source='cola.nombre', read_only = True) #trae el nombre de la cola
-    tiempo_espera = serializers.SerializerMethodField()
+    nombre_cola = serializers.CharField(source='cola.nombre', read_only = True) #read_only => solo lee, no modifica
+    codigo_cola = serializers.CharField(source='cola.codigo_cola', read_only = True )
+    tiempo_espera= serializers.SerializerMethodField() # SerializerMethodField dice que se va a calcular (campos q no esten en la BD)
     class Meta:
-        models = Ticket
-        fields = ['id','nombre_cola','estado','tiempo_espera']
+        model = Ticket
+        fields = ['id','nombre_cola','prioridad','codigo_cola','estado','tiempo_espera']
     def get_tiempo_espera(self, obj):
-        delta = timezone.now() - obj.fecha_creacion
-        return f"{delta.seconds // 60} minutos"
+        #si el ticket termino, tiene fecha_fin, si no tiene se usa la hora actual(timezone.now())
+        fin = obj.fecha_fin if obj.fecha_fin else timezone.now()
+        #resta fechas
+        delta = fin - obj.fecha_creacion
+        return f"{int(delta.total_seconds() // 60)} min"
+
+
+class TicketCreateSerializer(serializers.ModelSerializer):
+    codigo = serializers.CharField(read_only = True)
+    fecha_creacion = serializers.DateTimeField(read_only = True)
+    class Meta:
+        model = Ticket
+        fields = ['cola','prioridad','codigo','fecha_creacion']
+
+    # Esta función se ejecuta cuando haces .save().
+    # validated_data trae: { 'cola': <ObjetoCola>, 'prioridad': 'NORMAL' }
+    def create(self, validated_data):
+        #sacamos la cola q elijio el usuario
+        cola_seleccionada = validated_data['cola']
+        #filta y cuenta de solo tickets de esa cola
+        cantidad_existente = Ticket.objects.filter(cola=cola_seleccionada).count()
+        #se opera para obtener el orden del ticket creado
+        nuevo_numero = cantidad_existente +1
+        #se genera el "codigo de la cola"
+        codigo_generado = f"{cola_seleccionada.codigo_cola}-{nuevo_numero:03d}"
+        validated_data['codigo'] = codigo_generado
+        return super().create(validated_data)
+    
+class AsignacionTicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields =['id','estado','escritorio_asignado']
+    def validate(self, data):
+        if self.instance.estado != Ticket.Estados.PENDIENTE:
+            raise serializers.ValidationError('Este ticket ya esta siendo atendido o finalizo')
+        return data
+    def update(self, instance, validated_data):
+        instance.estado = Ticket.Estados.LLAMANDO
+        instance.fecha_llamada = timezone.now()
+        instance.save()
+        return instance
+    
+class ColaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cola
+        fields = ['id','codigo_cola','descripcion']
+
+class EscritorioSerializer(serializers.ModelSerializer):
+    colas_info = ColaSerializer(source='colas_que_atiende',many=True, read_only = True)
+    colas_que_atiende = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Cola.objects.all()
+    )
+    class Meta:
+        model = Escritorio
+        fields = ['id','usuario','numero_ventanilla','colas_que_atiende','colas_info']
