@@ -8,6 +8,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = Usuario
         fields = ['id','email','username','first_name','last_name','rol','nombre_rol']
 
+class RolSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rol
+        fields = ['id','nombre','descripcion']
+
 # Funcion de SimpleJWT, el proceso de Login (verificacion)
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -111,7 +116,7 @@ class AsignacionTicketSerializer(serializers.ModelSerializer):
 class ColaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cola
-        fields = ['id','codigo_cola','descripcion']
+        fields = ['id','nombre','codigo_cola','descripcion']
 
 class EscritorioSerializer(serializers.ModelSerializer):
     colas_info = ColaSerializer(source='colas_que_atiende',many=True, read_only = True)

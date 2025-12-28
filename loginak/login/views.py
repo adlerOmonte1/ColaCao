@@ -26,6 +26,10 @@ class UsuarioViewset(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UserSerializer
 
+class RolesViewSet(viewsets.ModelViewSet):
+    queryset = Rol.objects.all()
+    serializer_class = RolSerializer
+
 class ColaViewSet(viewsets.ModelViewSet):
     queryset = Cola.objects.all()
     serializer_class = ColaSerializer

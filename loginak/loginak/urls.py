@@ -9,6 +9,7 @@ router = routers.DefaultRouter()
 router.register('usuarios', views.UsuarioViewset)
 router.register('tickets',views.TicketViewSet)
 router.register('colas',views.ColaViewSet)
+router.register('roles',views.RolesViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     #EDPOINTS
