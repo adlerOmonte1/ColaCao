@@ -3,6 +3,7 @@ import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { User } from './pages/user/user';
+import { Colas } from './pages/colas/colas';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch:'full'},
@@ -11,6 +12,7 @@ export const routes: Routes = [
   {path:'register', component:Register},
   {path:'dashboard', component:Dashboard},
   {path:'usuarios',component:User},
+  {path:'colas',component:Colas},
   {path:'**', redirectTo:'login'}
 
 ];

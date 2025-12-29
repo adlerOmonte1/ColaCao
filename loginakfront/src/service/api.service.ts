@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, takeUntil } from "rxjs";
 import { Usuario } from "../models/usuario.models";
+import { Cola } from "../models/cola.models";
 
 @Injectable({
   providedIn: "root"
@@ -11,7 +12,7 @@ export class apiService{
     private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
-    }) 
+    })
     };
     constructor (private http:HttpClient ){}
 
@@ -29,7 +30,21 @@ export class apiService{
     }
     public deleteUsuario(id:string):Observable<void>{
         return this.http.delete<void>(this.ApiUrl+'usuarios/'+id+"/");
-    }  
+    }
+    public getColas():Observable<Cola[]>{
+      return this.http.get<Cola[]>(this.ApiUrl+'colas/');
+    }
 
+    public postColas(cola:Cola):Observable<Cola>{
+      let body = JSON.stringify(cola);
+      return this.http.post<Cola>(this.ApiUrl+'colas/',body,this.httpOptions);
+    }
+    public putColas(cola:Cola):Observable<Cola>{
+      let body = JSON.stringify(cola);
+      return this.http.post<Cola>(this.ApiUrl+'colas/'+cola.id+"/",body,this.httpOptions);
+    }
+    public deleteColas(id:string):Observable<void>{
+        return this.http.delete<void>(this.ApiUrl+'colas/'+id+"/");
+    }
 
 }

@@ -1,0 +1,30 @@
+<div class="container">
+
+  <h2>Listado de Colas</h2>
+
+  <table border="1" cellpadding="10" style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr style="background-color: #f0f0f0;">
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Código Letra</th>
+        <th>Descripción</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cola of colas">
+        <td>{{ cola.id }}</td>
+        <td>{{ cola.nombre }}</td>
+        <td>{{ cola.codigo_cola }}</td>
+        <td>{{ cola.descripcion }}</td>
+        <td >
+          <button (click)="eliminar(cola.id)">X</button>
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+
+
+</div>
