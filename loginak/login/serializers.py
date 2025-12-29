@@ -63,27 +63,17 @@ class RegisterSerializer(serializers.ModelSerializer):
             pass
         return user
 
-class TicketReadSerializer(serializers.ModelSerializer):
-    nombre_cola = serializers.CharField(source='cola.nombre', read_only = True) #read_only => solo lee, no modifica
-    codigo_cola = serializers.CharField(source='cola.codigo_cola', read_only = True )
-    tiempo_espera= serializers.SerializerMethodField() # SerializerMethodField dice que se va a calcular (campos q no esten en la BD)
+class ColaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Ticket
-        fields = ['id','nombre_cola','prioridad','codigo_cola','estado','tiempo_espera']
-    def get_tiempo_espera(self, obj):
-        #si el ticket termino, tiene fecha_fin, si no tiene se usa la hora actual(timezone.now())
-        fin = obj.fecha_fin if obj.fecha_fin else timezone.now()
-        #resta fechas
-        delta = fin - obj.fecha_creacion
-        return f"{int(delta.total_seconds() // 60)} min"
-
+        model = Cola
+        fields = ['id','nombre','codigo_cola','descripcion']
 
 class TicketCreateSerializer(serializers.ModelSerializer):
     codigo = serializers.CharField(read_only = True)
     fecha_creacion = serializers.DateTimeField(read_only = True)
     class Meta:
         model = Ticket
-        fields = ['cola','prioridad','codigo','fecha_creacion']
+        fields = ['cola','prioridad','nombre_cliente','codigo','fecha_creacion']
 
     # Esta función se ejecuta cuando haces .save().
     # validated_data trae: { 'cola': <ObjetoCola>, 'prioridad': 'NORMAL' }
@@ -99,6 +89,21 @@ class TicketCreateSerializer(serializers.ModelSerializer):
         validated_data['codigo'] = codigo_generado
         return super().create(validated_data)
     
+class TicketReadSerializer(serializers.ModelSerializer):
+    nombre_cola = serializers.CharField(source='cola.nombre', read_only = True) #read_only => solo lee, no modifica
+    #codigo_cola = serializers.CharField(source='cola.codigo_cola', read_only = True )
+    tiempo_espera= serializers.SerializerMethodField() # SerializerMethodField dice que se va a calcular (campos q no esten en la BD)
+    class Meta:
+        model = Ticket
+        fields = ['id','codigo','nombre_cola','nombre_cliente','prioridad','estado','tiempo_espera','fecha_fin']
+    def get_tiempo_espera(self, obj):
+        #si el ticket termino, tiene fecha_fin, si no tiene se usa la hora actual(timezone.now())
+        fin = obj.fecha_fin if obj.fecha_fin else timezone.now()
+        #resta fechas
+        delta = fin - obj.fecha_creacion
+        return f"{int(delta.total_seconds() // 60)} min"
+    
+
 class AsignacionTicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
@@ -113,10 +118,7 @@ class AsignacionTicketSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
     
-class ColaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Cola
-        fields = ['id','nombre','codigo_cola','descripcion']
+
 
 class EscritorioSerializer(serializers.ModelSerializer):
     colas_info = ColaSerializer(source='colas_que_atiende',many=True, read_only = True)

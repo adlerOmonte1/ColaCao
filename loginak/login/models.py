@@ -65,8 +65,9 @@ class Ticket(models.Model):
     )
     escritorio_asignado = models.ForeignKey(
         Escritorio, on_delete=models.SET_NULL, null=True, blank=True, 
-        related_name="tickets_asignados"
-    )
+        related_name="tickets_asignados" 
+    ) 
+    nombre_cliente = models.CharField(max_length=100, blank=True, null=True, default='Cliente x') #BORRAR EL NULL TRUE
     fecha_creacion = models.DateTimeField(auto_now_add=True) #hora llegada
     fecha_llamada = models.DateTimeField(null=True, blank=True) #hora cuando le llaman
     fecha_fin = models.DateTimeField(null=True, blank=True)
