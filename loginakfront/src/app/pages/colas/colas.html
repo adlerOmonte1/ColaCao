@@ -1,7 +1,7 @@
 <div class="container">
 
   <h2>Listado de Colas</h2>
-
+  <button (click)="crearCola()">Crear nueva Ventanilla</button>
   <table border="1" cellpadding="10" style="width: 100%; border-collapse: collapse;">
     <thead>
       <tr style="background-color: #f0f0f0;">
@@ -19,12 +19,41 @@
         <td>{{ cola.codigo_cola }}</td>
         <td>{{ cola.descripcion }}</td>
         <td >
-          <button (click)="eliminar(cola.id)">X</button>
-        </td>
-
+          <button (click)="eliminar(cola.id)">eliminar</button>
+          &nbsp; <button (click)="editarCola(cola)">Editar</button>
+       </td>
       </tr>
     </tbody>
   </table>
+</div>
 
+<div class="modal-overlay" *ngIf="abrirModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>{{tituloDialogo}}</h3>
+      <button (click)="cerrarModal()">Cerrar Modal </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label> Nombre de la Ventanilla</label>
+        <input id="nombre" type="text" [(ngModel)]="objetoCola.nombre" >
+      </div>
+      <div class="form-group">
+        <label> Codigo de Ventanilla</label>
+        <input id="codigo_cola" type="text" [(ngModel)]="objetoCola.codigo_cola">
+      </div>
+      <div class="form-group">
+        <label >Descripción de Ventanilla</label>
+        <input id="descripcion" type="text" [(ngModel)]="objetoCola.descripcion">
+      </div>
+
+    <div class="modal-footer">
+      <button class="btn-secundary" (click)="cerrarModal()">Cancelar</button>
+      <button class="btn-primary" (click)="guardarCambios()">Guardar Cambios</button>
+    </div>
+
+    </div>
+
+  </div>
 
 </div>

@@ -5,15 +5,15 @@ import { Usuario } from '../../../models/usuario.models';
 
 @Component({
   selector: 'app-user',
-  standalone: true, 
-  imports: [CommonModule], 
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './user.html',
   styleUrl: './user.css',
 })
 export class User implements OnInit {
   apiservice = inject(apiService);
   cd = inject(ChangeDetectorRef); // <--- 2. Inyectarlo aquí
-  
+
   usuarios : Usuario[]=[];
 
   ngOnInit(){
@@ -25,9 +25,9 @@ export class User implements OnInit {
       next: (data) => {
         console.log('✅ Datos recibidos:', data);
         this.usuarios = data;
-        
+
         // 3. ¡LA CURITA! Obliga a Angular a pintar la pantalla
-        this.cd.detectChanges(); 
+        this.cd.detectChanges();
       },
       error: (e) => console.error(e)
     });
@@ -40,4 +40,5 @@ export class User implements OnInit {
       })
     }
   }
+
 }

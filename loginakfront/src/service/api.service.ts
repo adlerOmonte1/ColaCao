@@ -41,7 +41,7 @@ export class apiService{
     }
     public putColas(cola:Cola):Observable<Cola>{
       let body = JSON.stringify(cola);
-      return this.http.post<Cola>(this.ApiUrl+'colas/'+cola.id+"/",body,this.httpOptions);
+      return this.http.put<Cola>(this.ApiUrl+'colas/'+cola.id+"/",body,this.httpOptions);
     }
     public deleteColas(id:string):Observable<void>{
         return this.http.delete<void>(this.ApiUrl+'colas/'+id+"/");
