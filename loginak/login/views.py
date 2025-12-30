@@ -154,7 +154,16 @@ class TicketViewSet(viewsets.ModelViewSet):
         )
 
 
+
+
 class EscritorioViewSet(viewsets.ModelViewSet):
     queryset = Escritorio.objects.all()
-    serializer_class = EscritorioSerializer
-    permission_classes = [EsRolAdministrador]
+    #permission_classes = [EsRolAdministrador]
+    # ESTA ES LA CLAVE MÁGICA ⬇
+    def get_serializer_class(self):
+        # Si la petición es GET (listar o ver uno), usa el detallado
+        if self.action in ['list', 'retrieve']:
+            return EscritorioReadSerializer
+        
+        # Si la petición es POST, PUT o PATCH, usa el de escritura
+        return EscritorioWriteSerializer

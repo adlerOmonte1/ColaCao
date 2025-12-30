@@ -17,7 +17,7 @@ export class Colas implements OnInit{
   colas : Cola[];
 
   // Crear nueva cola
-  tituloDialogo: string = 'Nueva Ventanilla';
+  tituloDialogo: string ;
   nuevaCola: boolean = true;
   objetoCola: Cola = new Cola();
 
@@ -52,6 +52,7 @@ export class Colas implements OnInit{
     this.abrirModal = true;
     this.nuevaCola = true;
     this.objetoCola = new Cola();
+    this.tituloDialogo = 'Nueva Ventanilla';
   }
 
   editarCola(cola:Cola){

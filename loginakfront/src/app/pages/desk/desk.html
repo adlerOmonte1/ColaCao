@@ -1,0 +1,102 @@
+<div class="container">
+
+  <div class="header-actions">
+    <h2>Listado de Escritorios</h2>
+    <button class="btn-crear" (click)="crearEscritorio()">+ Crear Ventanilla</button>
+  </div>
+
+  <table border="1" cellpadding="10" style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+    <thead>
+      <tr style="background-color: #f0f0f0;">
+        <th>ID</th>
+        <th>Encargado</th>
+        <th>Nombre de Ventanilla</th>
+        <th>Atención (Colas)</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let desk of desks">
+        <td>{{ desk.id }}</td>
+
+        <td>{{ desk.usuario.username || 'Sin asignar' }}</td>
+
+        <td>{{ desk.numero_ventanilla }}</td>
+
+        <td>
+          <span *ngFor="let info of desk.colas_info" class="badge" style="margin-right: 5px;">
+            {{ info.nombre }} ({{ info.codigo_cola }})
+          </span>
+        </td>
+
+        <td>
+          <button (click)="eliminarEscritorio(desk.id)" style="color: red;">Eliminar</button>
+          &nbsp;
+          <button (click)="editarEscritorio(desk)">Editar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<div class="modal-overlay" *ngIf="abrirModal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3>{{ textoDialogo }}</h3>
+      <button class="btn-close" (click)="cerrarModal()">×</button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="form-group">
+        <label>Nombre/Número de Ventanilla</label>
+        <input type="text" [(ngModel)]="objetoDesk.numero_ventanilla" placeholder="Ej: Ventanilla 1">
+      </div>
+
+      <div class="form-group">
+        <label>Encargado</label>
+        <select [(ngModel)]="usuarioSeleccionado" style="width: 100%; padding: 8px;">
+          <option [ngValue]="undefined" disabled>Seleccione un usuario...</option>
+          <option *ngFor="let u of users" [ngValue]="u">
+            {{ u.username }} ({{ u.first_name }})
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label style="display: block; margin-bottom: 8px; font-weight: bold;">
+          Colas a Atender (Selecciona varias):
+        </label>
+
+        <div style="border: 1px solid #ccc; padding: 10px; max-height: 150px; overflow-y: auto; background: #fff;">
+
+          <div *ngFor="let c of colas" style="margin-bottom: 5px;">
+            <label style="cursor: pointer; display: flex; align-items: center;">
+
+              <input type="checkbox"
+                     [checked]="estaSeleccionada(c)"
+                     (change)="toggleCola(c, $event)"
+                     style="margin-right: 8px;">
+
+              {{ c.nombre }} ({{ c.codigo_cola }})
+
+            </label>
+          </div>
+
+        </div>
+        <small style="color: gray;">
+           Seleccionadas: {{ colaSeleccionada?.length }}
+        </small>
+      </div>
+
+    </div>
+
+    <div class="modal-footer" style="margin-top: 20px; text-align: right;">
+      <button (click)="cerrarModal()" style="margin-right: 10px;">Cancelar</button>
+      <button (click)="guardarEscritorio()" style="background-color: blue; color: white;">Guardar</button>
+    </div>
+
+  </div>
+</div>

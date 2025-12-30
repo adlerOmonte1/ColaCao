@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable, takeUntil } from "rxjs";
 import { Usuario } from "../models/usuario.models";
 import { Cola } from "../models/cola.models";
+import { Escritorio } from "../models/escritorio.models";
+import { Ticket } from "../models/tickets.models";
 
 @Injectable({
   providedIn: "root"
@@ -46,5 +48,36 @@ export class apiService{
     public deleteColas(id:string):Observable<void>{
         return this.http.delete<void>(this.ApiUrl+'colas/'+id+"/");
     }
+    public getDesk():Observable<Escritorio[]>{
+      return this.http.get<Escritorio[]>(this.ApiUrl+'escritorios/')
+    }
+    public postDesk(escritorio:Escritorio):Observable<Escritorio>{
+      let body = JSON.stringify(escritorio);
+      return this.http.post<Escritorio>(this.ApiUrl+'escritorios/',body,this.httpOptions);
+    }
+    public putDesk(escritorio:Escritorio):Observable<Escritorio>{
+      let body = JSON.stringify(escritorio);
+      return this.http.put<Escritorio>(this.ApiUrl+'escritorios/'+escritorio.id+'/',body,this.httpOptions);
+    }
+    public deleteDesk(id:string):Observable<void>{
+      return this.http.delete<void>(this.ApiUrl+'escritorios/'+id+'/');
+    }
+    public getTicket():Observable<Ticket[]>{
+      return this.http.get<Ticket[]>(this.ApiUrl+'tickets/');
+    }
+    public postTicket(ticket:Ticket):Observable<Ticket>{
+      let body = JSON.stringify(ticket);
+      return this.http.post<Ticket>(this.ApiUrl+'tickets/',body,this.httpOptions);
+    }
+    public putTicket(ticket: Ticket):Observable<Ticket>{
+      let body = JSON.stringify(ticket);
+      return this.http.put<Ticket>(this.ApiUrl+'tickets/'+ticket.id+'/',body, this.httpOptions);
+    }
+    public deleteTicket(id:string):Observable<void>{
+      return this.http.delete<void>(this.ApiUrl+'tickets/'+id+'/');
+    }
+
+
+
 
 }

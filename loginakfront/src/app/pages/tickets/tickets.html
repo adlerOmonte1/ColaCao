@@ -1,0 +1,26 @@
+<div class="container">
+  <table border="1" cellpadding="10" style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+    <thead>
+      <tr>
+        <td>ID</td>
+        <td>Codigo</td>
+        <td>Cliente</td>
+        <td>Ventanilla</td>
+        <td>Estado</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cupo of tickets">
+        <td>{{cupo.id}}</td>
+        <td>{{cupo.codigo}}</td>
+        <td>{{cupo.nombre_cliente}}</td>
+        <td>{{cupo.nombre_cola}}</td>
+        <td>{{cupo.estado}}</td>
+
+
+      </tr>
+    </tbody>
+
+
+  </table>
+</div>

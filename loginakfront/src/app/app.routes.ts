@@ -4,6 +4,8 @@ import { Register } from './pages/register/register';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { User } from './pages/user/user';
 import { Colas } from './pages/colas/colas';
+import { Desk } from './pages/desk/desk';
+import { Tickets } from './pages/tickets/tickets';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch:'full'},
@@ -13,6 +15,8 @@ export const routes: Routes = [
   {path:'dashboard', component:Dashboard},
   {path:'usuarios',component:User},
   {path:'colas',component:Colas},
+  {path:'desk',component:Desk},
+  {path:'tickets/pantalla', component:Tickets},
   {path:'**', redirectTo:'login'}
 
 ];

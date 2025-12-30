@@ -120,12 +120,19 @@ class AsignacionTicketSerializer(serializers.ModelSerializer):
     
 
 
-class EscritorioSerializer(serializers.ModelSerializer):
+class EscritorioWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Escritorio
+        fields = '__all__'
+
+class EscritorioReadSerializer(serializers.ModelSerializer):
     colas_info = ColaSerializer(source='colas_que_atiende',many=True, read_only = True)
+    usuario = UserSerializer(read_only=True) #obtener todos los datos en json "POSTMAN"
     colas_que_atiende = serializers.PrimaryKeyRelatedField(
         many=True,
         queryset=Cola.objects.all()
     )
+    #cola = ColaSerializer(read_only=True)
     class Meta:
         model = Escritorio
         fields = ['id','usuario','numero_ventanilla','colas_que_atiende','colas_info']
